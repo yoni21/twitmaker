@@ -7,10 +7,22 @@ class TweetsController < ApplicationController
   def create
     @tweet = Tweet.new(tweet_params)
 
-    if @tweet.save
-      redirect_to tweets_path
+     if request.xhr?
+       @tweet.save
+
+       response_to do |format|
+        format.html do
+          render html: "<li class = 'tweet'><p>#{@ctweet.message}</p></li>".html_safe
+        end
+      end
+
     else
-      render :index
+
+      if @tweet.save
+         redirect_to tweets_path
+      else
+        render :index
+      end
     end
   end
 
